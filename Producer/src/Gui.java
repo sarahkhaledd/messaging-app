@@ -37,6 +37,7 @@ public class Gui extends JFrame {
 			try {
 				String msg = jtf.getText().trim();
 				x.writeUTF(msg);
+				jtf.setText("");
 				x.flush();
 			} catch (IOException ex) {
 				System.err.println(ex);

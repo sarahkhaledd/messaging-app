@@ -5,7 +5,7 @@ public class main {
 	{
 		producerLeader producerleader =new producerLeader();
 		producerleader.producerLeader();
-		//consumerLeader consumerleader =new consumerLeader();
+	//	consumerLeader consumerleader =new consumerLeader();
 
 	}
 
