@@ -1,8 +1,11 @@
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Date;
+import java.util.Scanner;
 
 import javax.swing.JTextArea;
 
@@ -11,27 +14,37 @@ public class consumerLeader {
 	public ServerSocket serverSocket;
 	public Socket consumerSocket;
 	boolean flag = true;
-	public JTextArea jta = new JTextArea();
-	producerLeader p =new producerLeader() ;
+	producerLeader p = new producerLeader();
+
 	public void sendData() throws IOException {
-		 DataOutputStream toServer = new DataOutputStream(consumerSocket.getOutputStream());
-		 p.messages.add("ok");
-		 toServer.writeUTF(p.messages.get(0));
-		 
-			toServer.flush();
-
-
+		DataOutputStream toServer = new DataOutputStream(consumerSocket.getOutputStream());
+		try {
+			File myObj = new File("C:\\Users\\DELL\\eclipse-workspace\\partitions\\partitionA.txt");
+			Scanner myReader = new Scanner(myObj);
+			while (myReader.hasNextLine()) {
+				String data = myReader.nextLine();
+				String[] info = data.split(" ");
+				for(int i=0;i<info.length;i++)
+				{
+					toServer.writeUTF(info[i]);
+				}
+				
+			}
+			myReader.close();
+		} catch (FileNotFoundException e) {
+			System.out.println("An error occurred.");
+			e.printStackTrace();
+		}
 	}
 
 	public consumerLeader() {
 
 		try {
-			Gui gui = new Gui(jta);
+			
 
 			serverSocket = new ServerSocket(5005);
 			while (true) {
 				consumerSocket = serverSocket.accept();
-				jta.append("Successfully connected for consumer started at : " + new Date() + "\n");
 
 				Thread th1 = new Thread(new Runnable() {
 					@Override
@@ -54,6 +67,10 @@ public class consumerLeader {
 			System.out.println("Problem with the socket server.");
 		}
 
+	}
+
+	public static void main(String[] args) {
+		consumerLeader consumerleader = new consumerLeader();
 	}
 
 }

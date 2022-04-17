@@ -13,27 +13,24 @@ public class consumer {
 	public static String hostname = "localhost";
 	public static int port = 5005;
 	public static String msg;
+	public static DataInputStream fromServer;
 	public ArrayList<String> messages = new ArrayList<String>();
 	public static JTextArea jta = new JTextArea();
-
-
 
 	public static void main(String[] args) throws Exception {
 
 		try {
-             Gui gui =new Gui( jta);
+			Gui gui = new Gui(jta);
 			Socket socket = new Socket(hostname, port);
-			 DataInputStream inputFromClient = new DataInputStream(socket.getInputStream());
-
+			fromServer = new DataInputStream(socket.getInputStream());
 
 			// get the result from the server
-			 
-			msg = inputFromClient.readUTF();
-			jta.append("Successfully recieved message from leader " + msg+ "\n");
 
-			System.out.println(msg);
+			while (true) {
+				msg = fromServer.readUTF();
+				jta.append("Successfully recieved message from leader: " + msg +" "+ "\n");
 
-				
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();

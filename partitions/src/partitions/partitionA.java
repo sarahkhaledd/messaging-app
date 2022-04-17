@@ -1,7 +1,10 @@
 package partitions;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.Socket;
@@ -17,43 +20,35 @@ public class partitionA {
 	public static void main(String[] args) {
 		try {
 			Socket socket = new Socket(hostname, port);
-			// create an output stream to send data to the leader
+			while (true)
+			{
 			toServer = new DataOutputStream(socket.getOutputStream());
 			fromServer = new DataInputStream(socket.getInputStream());
-			//sizeOfArray();
 			recieveDataFromLeader();
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public static void sizeOfArray() throws IOException {
-		toServer.write(3);
-	}
-
-	public void sendDataToLeader() {
-		// open fileA
-		// store arraylist
-		// toServer to leader WriteUTF
-	}
-
 	public static void recieveDataFromLeader() throws IOException {
-		FileWriter myWriter = new FileWriter("partitionA.txt");
-
-		for (int i = 0;;i++) {
-			String msg;
+		FileWriter writer = new FileWriter("partitionA.txt",true);  
+		String msg;
+		while (true) {
 			msg = fromServer.readUTF();
-			myWriter.write(msg);
-			if (msg != null) {
-				messages.add(msg);
-				System.out.println(messages.get(i));
-
-			} else
+			if(msg.equals("exit") || msg.equals("EXIT"))
+			{
 				break;
+			}
+			messages.add(msg);
+	}
+		for (int i = 0; i < messages.size(); i++) {
+			writer.write(messages.get(i)+" ");
+			
 		}
-		// fromServer readUTF
-		// store arraylist
-		// store it in file
+		writer.close();
+		
+
 	}
 }
