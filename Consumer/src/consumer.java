@@ -28,6 +28,7 @@ public class consumer {
 
 			while (true) {
 				msg = fromServer.readUTF();
+				System.out.println(msg);
 				jta.append("Successfully recieved message from leader: " + msg +" "+ "\n");
 
 			}
